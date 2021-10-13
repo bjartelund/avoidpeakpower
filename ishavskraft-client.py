@@ -16,7 +16,7 @@ headers = CaseInsensitiveDict()
 
 headers["Authorization"] = "Bearer %s" % token
 
-request= requests.get("https://utvikler.ishavskraft.no/api/v1/spotpriser/%s/%s/NO4" % (today.isoformat(),tomorrow.isoformat()),headers=headers)
+request= requests.get("https://utvikler.ishavskraft.no/api/v1/spotpriser/%s/%s/NO4" % (tomorrow.isoformat(),tomorrowplusone.isoformat()),headers=headers)
 timedict=dict()
 print(request.text)
 for klokkeslett in request.json()["spotprisDagList"][0]["spotprisList"]:
@@ -37,6 +37,7 @@ for hour in highestprices:
             print("continious")
         else:
             print("turn on again at %s" % (hourobject+timedelta(hours=1)))
+            atd.at("cd /home/bjarte/python/avoidpeakpower/ && ./heaters_on.py",future.astimezone().replace(tzinfo=None))
     prev=hourobject
     print("Turning off at %s" % hour)
     atd.at("cd /home/bjarte/python/avoidpeakpower/ && ./heaters_off.py",hourobject.astimezone().replace(tzinfo=None))
